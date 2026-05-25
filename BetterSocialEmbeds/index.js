@@ -21,6 +21,10 @@
             const instagramRegex = /https?:\/\/(?:www\.)?instagram\.com([^\s]+)/gi;
             newContent = newContent.replace(instagramRegex, (match, path) => `https://www.vxinstagram.com${path}`);
 
+            // Clean regex for TikTok URLs (handles www., vt., vm., etc.)
+            const tiktokRegex = /https?:\/\/(?:[a-z0-9]+\.)?tiktok\.com([^\s]+)/gi;
+            newContent = newContent.replace(tiktokRegex, (match, path) => `https://tnktok.com${path}`);
+
             // Apply modifications to the message content before it sends
             req.body.content = newContent;
           }
