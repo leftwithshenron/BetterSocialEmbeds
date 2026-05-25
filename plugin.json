@@ -1,6 +1,7 @@
 {
   "name": "BetterSocialEmbeds",
+  "description": "Automatically converts Twitter links to fixupx.com and Instagram links to vxinstagram.com",
   "author": "leftwithshenron",
-  "description": "Automatically converts Twitter/X links to fixupx.com and Instagram links to vxinstagram.com before sending.",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "tags": ["Utility"]
 }
