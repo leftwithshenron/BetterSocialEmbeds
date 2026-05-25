@@ -17,4 +17,4 @@ A native **Shelter** client mod plugin for Legcord/Discord that automatically in
 
 ## Installation URL
 ```text
-https://raw.githubusercontent.com/leftwithshenron/shelter-plugins/main/BetterSocialEmbeds/
+https://raw.githubusercontent.com/leftwithshenron/shelter-plugins/main/bettersocialembeds/
