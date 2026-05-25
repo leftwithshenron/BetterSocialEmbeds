@@ -1,40 +1,45 @@
-export default {
-  onLoad() {
-    console.log("[BetterSocialEmbeds] Loaded");
+(() => {
+  let origSend;
 
-    const origSend = XMLHttpRequest.prototype.send;
+  return {
+    onLoad() {
+      console.log("[BetterSocialEmbeds] Loaded");
 
-    XMLHttpRequest.prototype.send = function(body) {
-      try {
-        if (typeof body === "string") {
-          body = body.replace(
-            /https?:\/\/(?:www\.)?(?:twitter|x)\.com([^\s]+)/gi,
-            "https://fixupx.com$1"
-          );
+      origSend = XMLHttpRequest.prototype.send;
 
-          body = body.replace(
-            /https?:\/\/(?:www\.)?instagram\.com([^\s]+)/gi,
-            "https://www.vxinstagram.com$1"
-          );
+      XMLHttpRequest.prototype.send = function(body) {
+        try {
+          if (typeof body === "string") {
+            body = body.replace(
+              /https?:\/\/(?:www\.)?(?:twitter|x)\.com([^\s]+)/gi,
+              "https://fixupx.com$1"
+            );
 
-          body = body.replace(
-            /https?:\/\/(?:[a-z0-9]+\.)?tiktok\.com([^\s]+)/gi,
-            "https://tnktok.com$1"
-          );
+            body = body.replace(
+              /https?:\/\/(?:www\.)?instagram\.com([^\s]+)/gi,
+              "https://www.vxinstagram.com$1"
+            );
+
+            body = body.replace(
+              /https?:\/\/(?:[a-z0-9]+\.)?tiktok\.com([^\s]+)/gi,
+              "https://tnktok.com$1"
+            );
+          }
+        } catch (e) {
+          console.error("[BetterSocialEmbeds]", e);
         }
-      } catch (e) {
-        console.error(e);
-      }
 
-      return origSend.call(this, body);
-    };
+        return origSend.call(this, body);
+      };
 
-    this.unpatch = () => {
-      XMLHttpRequest.prototype.send = origSend;
-    };
-  },
+      this.unpatch = () => {
+        XMLHttpRequest.prototype.send = origSend;
+      };
+    },
 
-  onUnload() {
-    this.unpatch?.();
-  }
-};
+    onUnload() {
+      this.unpatch?.();
+      console.log("[BetterSocialEmbeds] Unloaded");
+    }
+  };
+})();
