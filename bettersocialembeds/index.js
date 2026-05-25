@@ -1,45 +1,30 @@
-(() => {
-  let unintercept;
-
-  return {
-    onLoad() {
-      const intercept = window.shelter?.http?.intercept;
-      if (!intercept) return;
-
-      unintercept = intercept(
-        "post",
-        /\/channels\/\d+\/messages/,
-        (req, send) => {
-          try {
-            if (req?.body?.content && typeof req.body.content === "string") {
-              let newContent = req.body.content;
-
-              // Clean regex for Twitter/X URLs
-              const twitterRegex = /https?:\/\/(?:www\.)?(?:twitter|x)\.com([^\s]+)/gi;
-              newContent = newContent.replace(twitterRegex, (match, path) => `https://fixupx.com${path}`);
-
-              // Clean regex for Instagram URLs
-              const instagramRegex = /https?:\/\/(?:www\.)?instagram\.com([^\s]+)/gi;
-              newContent = newContent.replace(instagramRegex, (match, path) => `https://www.vxinstagram.com${path}`);
-
-              // Clean regex for TikTok URLs
-              const tiktokRegex = /https?:\/\/(?:[a-z0-9]+\.)?tiktok\.com([^\s]+)/gi;
-              newContent = newContent.replace(tiktokRegex, (match, path) => `https://tnktok.com${path}`);
-
-              req.body.content = newContent;
-            }
-          } catch (e) {
-            console.error("[BetterSocialEmbeds] Error intercepting message contents:", e);
-          }
-          return send(req);
-        }
-      );
-    },
-
-    onUnload() {
-      if (unintercept) {
-        unintercept();
-      }
+export default {
+  onLoad() {
+    console.log("[BetterSocialEmbeds] Attempting to load...");
+    
+    if (!window.shelter || !window.shelter.http || !window.shelter.http.intercept) {
+      console.error("[BetterSocialEmbeds] Shelter interceptor missing");
+      return;
     }
-  };
-})();
+
+    this.unintercept = window.shelter.http.intercept(
+      "post",
+      /\/channels\/\d+\/messages/,
+      (req, send) => {
+        if (req.body && typeof req.body.content === "string") {
+          // Simplified replacement logic
+          req.body.content = req.body.content
+            .replace(/twitter\.com/gi, "fixupx.com")
+            .replace(/x\.com/gi, "fixupx.com")
+            .replace(/instagram\.com/gi, "vxinstagram.com")
+            .replace(/tiktok\.com/gi, "tnktok.com");
+        }
+        return send(req);
+      }
+    );
+  },
+
+  onUnload() {
+    if (this.unintercept) this.unintercept();
+  }
+};
