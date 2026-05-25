@@ -1,42 +1,43 @@
-// Remote plugins receive shelter utilities dynamically via injection
-export function onLoad(pluginConfig) {
-  // Access http utilities safely from the core modern dispatcher
+(() => {
   const intercept = window.shelter?.http?.intercept;
-  if (!intercept) return;
+  let unintercept;
 
-  window.socialEmbedUnintercept = intercept(
-    "post",
-    /\/channels\/\d+\/messages/,
-    (req, send) => {
-      try {
-        if (req?.body?.content && typeof req.body.content === "string") {
-          let newContent = req.body.content;
+  function handleMessage(req, send) {
+    try {
+      if (req?.body?.content && typeof req.body.content === "string") {
+        let newContent = req.body.content;
 
-          // Clean regex for Twitter/X URLs
-          const twitterRegex = /https?:\/\/(?:www\.)?(?:twitter|x)\.com([^\s]+)/gi;
-          newContent = newContent.replace(twitterRegex, (match, path) => `https://fixupx.com${path}`);
+        // Clean regex for Twitter/X URLs
+        const twitterRegex = /https?:\/\/(?:www\.)?(?:twitter|x)\.com([^\s]+)/gi;
+        newContent = newContent.replace(twitterRegex, (match, path) => `https://fixupx.com${path}`);
 
-          // Clean regex for Instagram URLs
-          const instagramRegex = /https?:\/\/(?:www\.)?instagram\.com([^\s]+)/gi;
-          newContent = newContent.replace(instagramRegex, (match, path) => `https://www.vxinstagram.com${path}`);
+        // Clean regex for Instagram URLs
+        const instagramRegex = /https?:\/\/(?:www\.)?instagram\.com([^\s]+)/gi;
+        newContent = newContent.replace(instagramRegex, (match, path) => `https://www.vxinstagram.com${path}`);
 
-          // Clean regex for TikTok URLs
-          const tiktokRegex = /https?:\/\/(?:[a-z0-9]+\.)?tiktok\.com([^\s]+)/gi;
-          newContent = newContent.replace(tiktokRegex, (match, path) => `https://tnktok.com${path}`);
+        // Clean regex for TikTok URLs
+        const tiktokRegex = /https?:\/\/(?:[a-z0-9]+\.)?tiktok\.com([^\s]+)/gi;
+        newContent = newContent.replace(tiktokRegex, (match, path) => `https://tnktok.com${path}`);
 
-          req.body.content = newContent;
-        }
-      } catch (e) {
-        console.error("[BetterSocialEmbeds] Error intercepting message contents:", e);
+        req.body.content = newContent;
       }
-      return send(req);
+    } catch (e) {
+      console.error("[BetterSocialEmbeds] Error intercepting message contents:", e);
     }
-  );
-}
-
-export function onUnload() {
-  if (window.socialEmbedUnintercept) {
-    window.socialEmbedUnintercept();
-    delete window.socialEmbedUnintercept;
+    return send(req);
   }
-}
+
+  // Return a unified plugin object wrapper that Shelter can execute remotely
+  return {
+    onLoad() {
+      if (intercept) {
+        unintercept = intercept("post", /\/channels\/\d+\/messages/, handleMessage);
+      }
+    },
+    onUnload() {
+      if (unintercept) {
+        unintercept();
+      }
+    }
+  };
+})();
