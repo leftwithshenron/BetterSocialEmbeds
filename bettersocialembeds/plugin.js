@@ -23,7 +23,7 @@ export default {
           );
         }
       } catch (e) {
-        console.error("[BetterSocialEmbeds]", e);
+        console.error(e);
       }
 
       return origSend.call(this, body);
@@ -36,6 +36,5 @@ export default {
 
   onUnload() {
     this.unpatch?.();
-    console.log("[BetterSocialEmbeds] Unloaded");
   }
 };
