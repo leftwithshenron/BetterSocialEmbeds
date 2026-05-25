@@ -1,0 +1,39 @@
+name: Deploy Plugins to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-node-version: 20
+
+      - name: Install Dependencies
+        run: |
+          npm install -g lune
+          # Creates a quick fallback package if Lune demands tracking
+          if [ ! -f package.json ]; then echo '{"dependencies":{}}' > package.json; fi
+
+      - name: Build Plugins via Lune
+        run: |
+          lune build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
