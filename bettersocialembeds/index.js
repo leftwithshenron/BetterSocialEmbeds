@@ -1,52 +1,41 @@
-(() => {
-  let unintercept;
+export default {
+  onLoad() {
+    console.log("[BetterSocialEmbeds] Loaded");
 
-  return {
-    onLoad() {
-      const intercept = window.shelter?.http?.intercept;
+    const origSend = XMLHttpRequest.prototype.send;
 
-      if (!intercept) {
-        console.warn("[BetterSocialEmbeds] Shelter interceptor not found.");
-        return;
+    XMLHttpRequest.prototype.send = function(body) {
+      try {
+        if (typeof body === "string") {
+          body = body.replace(
+            /https?:\/\/(?:www\.)?(?:twitter|x)\.com([^\s]+)/gi,
+            "https://fixupx.com$1"
+          );
+
+          body = body.replace(
+            /https?:\/\/(?:www\.)?instagram\.com([^\s]+)/gi,
+            "https://www.vxinstagram.com$1"
+          );
+
+          body = body.replace(
+            /https?:\/\/(?:[a-z0-9]+\.)?tiktok\.com([^\s]+)/gi,
+            "https://tnktok.com$1"
+          );
+        }
+      } catch (e) {
+        console.error("[BetterSocialEmbeds]", e);
       }
 
-      unintercept = intercept(
-        "post",
-        /\/channels\/\d+\/messages/,
-        (req, send) => {
-          if (
-            req?.body?.content &&
-            typeof req.body.content === "string"
-          ) {
-            let c = req.body.content;
+      return origSend.call(this, body);
+    };
 
-            c = c.replace(
-              /https?:\/\/(?:www\.)?(?:twitter|x)\.com([^\s]+)/gi,
-              "https://fixupx.com$1"
-            );
+    this.unpatch = () => {
+      XMLHttpRequest.prototype.send = origSend;
+    };
+  },
 
-            c = c.replace(
-              /https?:\/\/(?:www\.)?instagram\.com([^\s]+)/gi,
-              "https://www.vxinstagram.com$1"
-            );
-
-            c = c.replace(
-              /https?:\/\/(?:[a-z0-9]+\.)?tiktok\.com([^\s]+)/gi,
-              "https://tnktok.com$1"
-            );
-
-            req.body.content = c;
-
-            return send(req);
-          }
-
-          return send(req);
-        }
-      );
-    },
-
-    onUnload() {
-      unintercept?.();
-    }
-  };
-})();
+  onUnload() {
+    this.unpatch?.();
+    console.log("[BetterSocialEmbeds] Unloaded");
+  }
+};
