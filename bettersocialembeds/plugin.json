@@ -1,6 +1,7 @@
 {
   "name": "BetterSocialEmbeds",
+  "description": "Fixes embeds for Twitter/X, Instagram and TikTok.",
   "author": "leftwithshenron",
-  "description": "Fixes embeds for X/Twitter, Instagram, and TikTok.",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "main": "index.js"
 }
