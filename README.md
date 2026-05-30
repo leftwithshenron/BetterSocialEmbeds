@@ -9,13 +9,13 @@ A native **Shelter** client mod plugin for Legcord/Discord that automatically in
 
 ## How to Install (Via Shelter)
 
-1. Copy the raw repository subfolder URL (see below).
-2. Open your Discord/Legcord client settings panel.
+1. Copy the GitHub Pages URL (see below).
+2. Open your Legcord client settings panel.
 3. Scroll down to the **Shelter** settings segment and click on **Plugins**.
 4. Paste the installation URL line directly into the proxy install field box.
-5. Click **Install/Add Plugin**, and flip the toggle switch to active!
+5. Click **Fetch**, and flip the toggle switch to active!
 
 ## Installation URL
 ```text
-https://leftwithshenron.github.io/shelter-plugins/bettersocialembeds/
+https://leftwithshenron.github.io/shelter-plugins/bettersocialembeds/ 
 
