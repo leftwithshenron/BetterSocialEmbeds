@@ -9,7 +9,7 @@ A native **Shelter** client mod plugin for Legcord/Discord that automatically in
 
 ## How to Install (Via Shelter)
 
-1. Copy your raw repository subfolder URL (see below).
+1. Copy the raw repository subfolder URL (see below).
 2. Open your Discord/Legcord client settings panel.
 3. Scroll down to the **Shelter** settings segment and click on **Plugins**.
 4. Paste the installation URL line directly into the proxy install field box.
