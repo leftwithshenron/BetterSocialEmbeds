@@ -1,6 +1,6 @@
 # BetterSocialEmbeds
 
-A native **Shelter** client mod plugin for Legcord/Discord that automatically intercepts outgoing chat messages and replaces standard media URLs with direct-embedding alternatives right before they hit the network.
+A native **Shelter** client mod plugin for Legcord that automatically intercepts outgoing chat messages and replaces standard media URLs with direct-embedding alternatives right before they hit the network.
 
 ## Features
 * Replaces `twitter.com` and `x.com` links with `fixupx.com`
